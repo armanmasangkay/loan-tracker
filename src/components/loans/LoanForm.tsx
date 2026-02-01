@@ -8,7 +8,7 @@ export function LoanForm() {
   const [state, formAction, isPending] = useActionState(createLoan, null);
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="flex flex-col gap-5">
       {state?.error && (
         <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
           {state.error}

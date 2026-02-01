@@ -26,15 +26,15 @@ export function UserForm({ onSuccess }: UserFormProps) {
   ];
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="space-y-8">
       {state?.error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="p-4 bg-[var(--status-danger)] border border-red-200 rounded-lg text-[var(--status-danger-text)] text-sm">
           {state.error}
         </div>
       )}
 
       {state?.success && (
-        <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+        <div className="p-4 bg-[var(--status-success)] border border-green-200 rounded-lg text-[var(--status-success-text)] text-sm">
           User created successfully! Default password is &quot;password&quot;.
         </div>
       )}
@@ -63,7 +63,7 @@ export function UserForm({ onSuccess }: UserFormProps) {
         disabled={isPending}
       />
 
-      <p className="text-sm text-slate-500">
+      <p className="text-sm text-[var(--muted-foreground)]">
         Default password will be set to &quot;password&quot;. The user should change it
         after first login.
       </p>

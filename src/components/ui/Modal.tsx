@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { createPortal } from "react-dom";
 import { cn } from "@/lib/utils";
 
 interface ModalProps {
@@ -19,6 +20,11 @@ export function Modal({
   className,
 }: ModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -38,31 +44,51 @@ export function Modal({
     };
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || !mounted) return null;
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClose();
+  };
+
+  const handleModalClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
+  const handleCloseClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onClose();
+  };
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      onClick={handleModalClick}
+    >
       {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/50 animate-fade-in"
-        onClick={onClose}
+        onClick={handleBackdropClick}
       />
 
       {/* Modal */}
       <div
         ref={modalRef}
         className={cn(
-          "relative bg-white rounded-xl shadow-xl w-full max-w-md animate-slide-up",
+          "relative bg-white rounded-lg shadow-xl w-full max-w-md animate-slide-up",
           "max-h-[90vh] overflow-y-auto",
           className
         )}
+        onClick={handleModalClick}
       >
         {title && (
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-100 sm:px-6">
-            <h2 className="text-lg font-semibold text-slate-900">{title}</h2>
+          <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--border)] sm:px-6">
+            <h2 className="text-lg font-semibold text-[var(--foreground)]">{title}</h2>
             <button
-              onClick={onClose}
-              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
+              onClick={handleCloseClick}
+              className="p-1.5 rounded-lg text-[var(--muted-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--muted)] transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center"
             >
               <svg
                 className="h-5 w-5"
@@ -82,6 +108,7 @@ export function Modal({
         )}
         <div className="p-4 sm:p-6">{children}</div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

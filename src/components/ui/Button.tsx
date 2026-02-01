@@ -11,18 +11,19 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const variantClasses = {
   primary:
-    "bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-sm",
+    "bg-gradient-to-r from-teal-600 to-teal-500 text-white hover:from-teal-700 hover:to-teal-600 focus:ring-teal-500 shadow-sm",
   secondary:
-    "bg-slate-100 text-slate-700 hover:bg-slate-200 focus:ring-slate-500",
+    "bg-[var(--secondary)] text-[var(--secondary-foreground)] hover:bg-zinc-200 focus:ring-[var(--ring)]",
   outline:
-    "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50 focus:ring-slate-500",
-  ghost: "text-slate-700 hover:bg-slate-100 focus:ring-slate-500",
+    "border-2 border-teal-500 bg-white text-teal-600 hover:bg-teal-50 focus:ring-teal-500",
+  ghost:
+    "text-[var(--foreground)] hover:bg-teal-50 hover:text-teal-600 focus:ring-[var(--ring)]",
   danger:
-    "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-sm",
+    "bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 focus:ring-red-500 shadow-sm",
 };
 
 const sizeClasses = {
-  sm: "px-3 py-1.5 text-sm min-h-[36px]",
+  sm: "px-3 py-1.5 text-sm min-h-[40px]",
   md: "px-4 py-2 text-sm min-h-[44px]",
   lg: "px-6 py-3 text-base min-h-[52px]",
 };

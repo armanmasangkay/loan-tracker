@@ -27,7 +27,7 @@ export default function NewLoanPage() {
       </div>
 
       <Card>
-        <CardContent className="pt-6">
+        <CardContent className="py-6">
           <LoanForm />
         </CardContent>
       </Card>

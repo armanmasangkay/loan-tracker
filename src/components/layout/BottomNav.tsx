@@ -12,7 +12,7 @@ export function BottomNav({ isAdmin }: BottomNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 safe-area-bottom">
+    <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t-2 border-t-teal-500 safe-area-bottom shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
       <div className="flex items-center justify-around h-16 px-2">
         <NavItem
           href="/dashboard"
@@ -127,8 +127,8 @@ function NavItem({
       className={cn(
         "flex flex-col items-center justify-center min-w-[64px] min-h-[44px] px-3 py-1 rounded-lg transition-colors",
         current
-          ? "text-blue-600"
-          : "text-slate-500 hover:text-slate-700"
+          ? "text-teal-600 bg-teal-50"
+          : "text-[var(--muted-foreground)] hover:text-teal-600 hover:bg-teal-50/50"
       )}
     >
       {icon}

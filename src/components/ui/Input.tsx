@@ -15,7 +15,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
         {label && (
           <label
             htmlFor={inputId}
-            className="block text-sm font-medium text-slate-700 mb-1.5"
+            className="block text-sm font-medium text-[var(--foreground)] mb-2"
           >
             {label}
           </label>
@@ -24,19 +24,19 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={inputId}
           className={cn(
-            "w-full px-3 py-2.5 rounded-lg border border-slate-300 bg-white text-slate-900",
-            "placeholder:text-slate-400",
-            "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent",
-            "disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed",
+            "w-full px-4 py-3 rounded-lg border border-[var(--border)] bg-white text-[var(--foreground)]",
+            "placeholder:text-[var(--muted-foreground)]",
+            "focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:border-transparent",
+            "disabled:bg-[var(--muted)] disabled:text-[var(--muted-foreground)] disabled:cursor-not-allowed",
             "transition-colors duration-200",
-            "min-h-[44px]", // Touch-friendly height
-            error && "border-red-500 focus:ring-red-500",
+            "min-h-[48px]",
+            error && "border-[var(--destructive)] focus:ring-[var(--destructive)]",
             className
           )}
           {...props}
         />
         {error && (
-          <p className="mt-1.5 text-sm text-red-600 flex items-center gap-1">
+          <p className="mt-1.5 text-sm text-[var(--destructive)] flex items-center gap-1">
             <svg
               className="h-4 w-4"
               fill="currentColor"

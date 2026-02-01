@@ -35,7 +35,7 @@ export default async function LoanDetailPage({ params }: LoanDetailPageProps) {
   const isAdmin = session?.user.role === "admin";
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-10">
       {/* Back Button */}
       <div className="flex items-center justify-between">
         <Link href="/dashboard">
@@ -63,12 +63,12 @@ export default async function LoanDetailPage({ params }: LoanDetailPageProps) {
       {/* Main Info Card */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-              <h2 className="text-xl font-semibold text-slate-900">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="space-y-1">
+              <h2 className="text-xl font-semibold text-[var(--foreground)]">
                 {loan.applicantName}
               </h2>
-              <p className="text-sm text-slate-500 mt-1">
+              <p className="text-sm text-[var(--muted-foreground)]">
                 Created by {loan.createdBy.displayName}
               </p>
             </div>
@@ -76,23 +76,23 @@ export default async function LoanDetailPage({ params }: LoanDetailPageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <p className="text-sm text-slate-500">Loan Amount</p>
-              <p className="text-2xl font-bold text-slate-900 mt-1">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+            <div className="space-y-3">
+              <p className="text-sm text-[var(--muted-foreground)]">Loan Amount</p>
+              <p className="text-2xl font-bold text-[var(--foreground)]">
                 {formatPHP(loan.amount)}
               </p>
             </div>
-            <div>
-              <p className="text-sm text-slate-500">Application Date</p>
-              <p className="text-lg font-semibold text-slate-900 mt-1">
+            <div className="space-y-3">
+              <p className="text-sm text-[var(--muted-foreground)]">Application Date</p>
+              <p className="text-lg font-semibold text-[var(--foreground)]">
                 {format(new Date(loan.applicationDate), "MMMM d, yyyy")}
               </p>
             </div>
           </div>
 
           {/* Status Change */}
-          <div className="mt-6 pt-6 border-t border-slate-100">
+          <div className="mt-8 pt-8 border-t border-[var(--border)]">
             <LoanStatusSelect
               loanId={loan.id}
               currentStatus={loan.status as LoanStatus}
@@ -102,11 +102,11 @@ export default async function LoanDetailPage({ params }: LoanDetailPageProps) {
       </Card>
 
       {/* Tabs for Mobile / Side-by-side for Desktop */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Status History */}
         <Card>
           <CardHeader>
-            <h3 className="text-lg font-semibold text-slate-900">
+            <h3 className="text-lg font-semibold text-[var(--foreground)]">
               Status History
             </h3>
           </CardHeader>
@@ -118,7 +118,7 @@ export default async function LoanDetailPage({ params }: LoanDetailPageProps) {
         {/* Notes */}
         <Card>
           <CardHeader>
-            <h3 className="text-lg font-semibold text-slate-900">
+            <h3 className="text-lg font-semibold text-[var(--foreground)]">
               Notes & Remarks
             </h3>
           </CardHeader>

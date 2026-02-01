@@ -69,12 +69,12 @@ export function LoanStatusSelect({
       >
         <div className="space-y-4">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className="p-3 bg-[var(--status-danger)] border border-red-200 rounded-lg text-[var(--status-danger-text)] text-sm">
               {error}
             </div>
           )}
 
-          <p className="text-slate-600">
+          <p className="text-[var(--secondary-foreground)]">
             Change status from{" "}
             <span className="font-semibold">{LOAN_STATUS_LABELS[currentStatus]}</span>{" "}
             to{" "}

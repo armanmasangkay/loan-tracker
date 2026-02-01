@@ -43,10 +43,10 @@ export function UserCard({ user }: UserCardProps) {
           {/* User Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="text-base font-semibold text-slate-900">
+              <h3 className="text-base font-semibold text-[var(--foreground)]">
                 {user.displayName}
               </h3>
-              <Badge variant={user.role === "admin" ? "primary" : "default"}>
+              <Badge variant={user.role === "admin" ? "info" : "default"}>
                 {user.role}
               </Badge>
               {!user.isActive && (
@@ -54,9 +54,9 @@ export function UserCard({ user }: UserCardProps) {
               )}
             </div>
 
-            <p className="text-sm text-slate-500 mt-1">@{user.username}</p>
+            <p className="text-sm text-[var(--muted-foreground)] mt-1">@{user.username}</p>
 
-            <div className="mt-2 text-xs text-slate-400 space-y-0.5">
+            <div className="mt-2 text-xs text-[var(--muted-foreground)] space-y-0.5">
               <p>
                 Created: {format(new Date(user.createdAt), "MMM d, yyyy")}
               </p>
@@ -98,11 +98,11 @@ export function UserCard({ user }: UserCardProps) {
         title="Reset Password"
       >
         <div className="space-y-4">
-          <p className="text-slate-600">
+          <p className="text-[var(--secondary-foreground)]">
             Reset password for <strong>{user.displayName}</strong> to the default
             password &quot;password&quot;?
           </p>
-          <p className="text-sm text-amber-600">
+          <p className="text-sm text-[var(--status-warning-text)]">
             This will also log out the user from all sessions.
           </p>
 
@@ -134,7 +134,7 @@ export function UserCard({ user }: UserCardProps) {
         title={user.isActive ? "Disable User" : "Enable User"}
       >
         <div className="space-y-4">
-          <p className="text-slate-600">
+          <p className="text-[var(--secondary-foreground)]">
             {user.isActive ? (
               <>
                 Disable <strong>{user.displayName}</strong>? They will not be

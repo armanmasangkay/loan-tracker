@@ -8,15 +8,15 @@ export function ChangePasswordForm() {
   const [state, formAction, isPending] = useActionState(changePassword, null);
 
   return (
-    <form action={formAction} className="space-y-6">
+    <form action={formAction} className="flex flex-col gap-5">
       {state?.error && (
-        <div className="p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+        <div className="p-4 bg-[var(--status-danger)] border border-red-200 rounded-lg text-[var(--status-danger-text)] text-sm">
           {state.error}
         </div>
       )}
 
       {state?.success && (
-        <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+        <div className="p-4 bg-[var(--status-success)] border border-green-200 rounded-lg text-[var(--status-success-text)] text-sm">
           Password changed successfully!
         </div>
       )}
@@ -51,9 +51,9 @@ export function ChangePasswordForm() {
         disabled={isPending}
       />
 
-      <div className="text-sm text-slate-500 space-y-1">
+      <div className="text-sm text-[var(--muted-foreground)] space-y-1">
         <p>Password requirements:</p>
-        <ul className="list-disc list-inside text-xs space-y-0.5 text-slate-400">
+        <ul className="list-disc list-inside text-xs space-y-0.5 text-[var(--muted-foreground)]">
           <li>At least 8 characters</li>
           <li>At least one uppercase letter</li>
           <li>At least one lowercase letter</li>

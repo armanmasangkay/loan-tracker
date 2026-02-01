@@ -17,7 +17,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
   const params = await searchParams;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-10 py-2">
       <Suspense fallback={null}>
         <LoanFiltersComponent />
       </Suspense>
@@ -60,7 +60,7 @@ async function LoanListWithData({
     <>
       <LoanList loans={loans} />
 
-      <div className="sticky bottom-20 md:bottom-0 z-30">
+      <div className="sticky bottom-[5.5rem] md:bottom-4 z-30 mt-12">
         <LoanSummary totalReleased={totalReleased} loanCount={loans.length} />
       </div>
     </>

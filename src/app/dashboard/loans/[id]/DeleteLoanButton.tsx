@@ -44,12 +44,12 @@ export function DeleteLoanButton({ loanId }: DeleteLoanButtonProps) {
       >
         <div className="space-y-4">
           {error && (
-            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
+            <div className="p-3 bg-[var(--status-danger)] border border-red-200 rounded-lg text-[var(--status-danger-text)] text-sm">
               {error}
             </div>
           )}
 
-          <p className="text-slate-600">
+          <p className="text-[var(--secondary-foreground)]">
             Are you sure you want to delete this loan? This action cannot be
             undone.
           </p>

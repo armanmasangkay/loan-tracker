@@ -7,14 +7,14 @@ interface SkeletonProps {
 export function Skeleton({ className }: SkeletonProps) {
   return (
     <div
-      className={cn("animate-pulse rounded-md bg-slate-200", className)}
+      className={cn("animate-pulse rounded-md bg-[var(--border)]", className)}
     />
   );
 }
 
 export function SkeletonCard() {
   return (
-    <div className="bg-white rounded-xl border border-slate-200 p-4 sm:p-6">
+    <div className="bg-white rounded-lg border border-[var(--border)] p-4 sm:p-6">
       <div className="flex justify-between items-start gap-4">
         <div className="flex-1 space-y-3">
           <Skeleton className="h-5 w-48" />

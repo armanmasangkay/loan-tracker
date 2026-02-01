@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
 :root {
-  --background: #faf9f7;
-  --foreground: #1c1917;
-  --primary: #2563eb;
+  /* Primary - Teal (sophisticated, trustworthy) */
+  --primary: #0f766e;
+  --primary-hover: #0d9488;
+  --primary-light: #ccfbf1;
   --primary-foreground: #ffffff;
-  --secondary: #f1f5f9;
-  --secondary-foreground: #475569;
-  --accent: #14b8a6;
-  --accent-foreground: #ffffff;
-  --destructive: #ef4444;
+
+  /* Neutrals - Zinc scale */
+  --background: #fafafa;
+  --foreground: #18181b;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --border: #e4e4e7;
+
+  /* Secondary */
+  --secondary: #f4f4f5;
+  --secondary-foreground: #3f3f46;
+
+  /* Destructive */
+  --destructive: #dc2626;
   --destructive-foreground: #ffffff;
-  --border: #e2e8f0;
-  --ring: #2563eb;
-  --muted: #f1f5f9;
-  --muted-foreground: #64748b;
+
+  /* Focus ring */
+  --ring: #0d9488;
+
+  /* Status Colors - Unique color for each status */
+  --status-applied: #dbeafe;
+  --status-applied-text: #1e40af;
+  --status-verified: #cffafe;
+  --status-verified-text: #0e7490;
+  --status-approved: #d1fae5;
+  --status-approved-text: #047857;
+  --status-encoded: #ede9fe;
+  --status-encoded-text: #6d28d9;
+  --status-vouchered: #fef3c7;
+  --status-vouchered-text: #92400e;
+  --status-released: #dcfce7;
+  --status-released-text: #166534;
+  --status-cancelled: #fee2e2;
+  --status-cancelled-text: #991b1b;
+
+  /* Design tokens */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
 }
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
-  padding: 0;
-  margin: 0;
 }
 
 html,
@@ -108,7 +140,7 @@ body {
 
 /* Focus ring styles */
 .focus-ring {
-  @apply focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2;
+  @apply focus:outline-none focus:ring-2 focus:ring-[var(--ring)] focus:ring-offset-2;
 }
 
 /* Scrollbar styles */
@@ -128,4 +160,9 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* Safe area for mobile devices with home indicator */
+.safe-area-bottom {
+  padding-bottom: env(safe-area-inset-bottom, 0);
 }

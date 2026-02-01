@@ -14,11 +14,11 @@ export default async function UsersPage() {
   const users = await getUsers();
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-10">
       {/* Create User Form */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold text-slate-900">
+          <h2 className="text-lg font-semibold text-[var(--foreground)]">
             Create New User
           </h2>
         </CardHeader>
@@ -29,16 +29,18 @@ export default async function UsersPage() {
 
       {/* Users List */}
       <div>
-        <h2 className="text-lg font-semibold text-slate-900 mb-4">
+        <h2 className="text-lg font-semibold text-[var(--foreground)] mb-4">
           All Users ({users.length})
         </h2>
 
         {users.length === 0 ? (
-          <p className="text-center text-slate-500 py-8">No users found</p>
+          <p className="text-center text-[var(--muted-foreground)] py-8">No users found</p>
         ) : (
-          <div className="space-y-3">
+          <div className="flex flex-col gap-4">
             {users.map((user) => (
-              <UserCard key={user.id} user={user} />
+              <div key={user.id}>
+                <UserCard user={user} />
+              </div>
             ))}
           </div>
         )}

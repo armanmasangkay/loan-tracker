@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useTransition, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Input, Select, Button } from "@/components/ui";
 import { LOAN_STATUSES, LOAN_STATUS_LABELS } from "@/lib/db/schema";
@@ -11,11 +11,18 @@ export function LoanFilters() {
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
   const [showFilters, setShowFilters] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const currentStatus = searchParams.get("status") || "";
   const currentSearch = searchParams.get("search") || "";
   const currentStartDate = searchParams.get("startDate") || "";
   const currentEndDate = searchParams.get("endDate") || "";
+
+  // Sync searchValue with URL params
+  useEffect(() => {
+    setSearchValue(currentSearch);
+  }, [currentSearch]);
 
   const updateFilters = (updates: Record<string, string>) => {
     const params = new URLSearchParams(searchParams.toString());
@@ -51,30 +58,61 @@ export function LoanFilters() {
   ];
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4" style={{ marginBottom: '2.5rem' }}>
       {/* Search Bar */}
-      <div className="flex gap-2">
-        <div className="flex-1">
+      <div className="flex gap-3">
+        <div className="flex-1 relative">
           <Input
             placeholder="Search by name..."
-            defaultValue={currentSearch}
+            value={searchValue}
             onChange={(e) => {
               const value = e.target.value;
+              setSearchValue(value);
               // Debounce search
-              const timeoutId = setTimeout(() => {
+              if (debounceRef.current) {
+                clearTimeout(debounceRef.current);
+              }
+              debounceRef.current = setTimeout(() => {
                 updateFilters({ search: value });
               }, 300);
-              return () => clearTimeout(timeoutId);
             }}
-            className="w-full"
+            className="w-full pr-8"
           />
+          {searchValue && (
+            <button
+              type="button"
+              onClick={() => {
+                setSearchValue("");
+                if (debounceRef.current) {
+                  clearTimeout(debounceRef.current);
+                }
+                updateFilters({ search: "" });
+              }}
+              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors"
+              aria-label="Clear search"
+            >
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
+              </svg>
+            </button>
+          )}
         </div>
         <Button
           variant="outline"
           onClick={() => setShowFilters(!showFilters)}
           className={cn(
             "shrink-0",
-            hasFilters && "border-blue-500 text-blue-600"
+            hasFilters && "border-[var(--primary)] text-[var(--primary)]"
           )}
         >
           <svg
@@ -92,7 +130,7 @@ export function LoanFilters() {
           </svg>
           <span className="hidden sm:inline ml-2">Filters</span>
           {hasFilters && (
-            <span className="ml-1 bg-blue-100 text-blue-600 text-xs px-1.5 py-0.5 rounded-full">
+            <span className="ml-1 bg-[var(--primary-light)] text-[var(--primary)] text-xs px-1.5 py-0.5 rounded-full">
               !
             </span>
           )}
@@ -101,7 +139,7 @@ export function LoanFilters() {
 
       {/* Filter Panel */}
       {showFilters && (
-        <div className="bg-white border border-slate-200 rounded-xl p-4 space-y-4 animate-slide-down">
+        <div className="bg-white border border-[var(--border)] rounded-lg p-4 sm:p-5 space-y-4 animate-slide-down">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Select
               label="Status"
@@ -137,7 +175,7 @@ export function LoanFilters() {
 
       {/* Loading indicator */}
       {isPending && (
-        <div className="text-sm text-slate-500 flex items-center gap-2">
+        <div className="text-sm text-[var(--muted-foreground)] flex items-center gap-2">
           <svg
             className="animate-spin h-4 w-4"
             fill="none"

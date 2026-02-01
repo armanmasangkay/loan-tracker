@@ -33,7 +33,7 @@ export function CleanupButton({ eligibleCount }: CleanupButtonProps) {
     <>
       <div className="space-y-4">
         {result && (
-          <div className="p-4 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm">
+          <div className="p-4 bg-[var(--status-success)] border border-green-200 rounded-lg text-[var(--status-success-text)] text-sm">
             Cleanup completed! Deleted {result.deletedReleasedCount} released
             loan(s) and {result.deletedCancelledCount} cancelled loan(s).
           </div>
@@ -49,7 +49,7 @@ export function CleanupButton({ eligibleCount }: CleanupButtonProps) {
         </Button>
 
         {eligibleCount === 0 && (
-          <p className="text-sm text-slate-500">
+          <p className="text-sm text-[var(--muted-foreground)]">
             No loans eligible for cleanup at this time.
           </p>
         )}
@@ -61,12 +61,12 @@ export function CleanupButton({ eligibleCount }: CleanupButtonProps) {
         title="Confirm Cleanup"
       >
         <div className="space-y-4">
-          <p className="text-slate-600">
+          <p className="text-[var(--secondary-foreground)]">
             This will permanently delete <strong>{eligibleCount}</strong>{" "}
             loan(s) that meet the retention policy criteria.
           </p>
 
-          <p className="text-sm text-amber-600">
+          <p className="text-sm text-[var(--status-warning-text)]">
             This action cannot be undone. All associated status history and
             notes will also be deleted.
           </p>

@@ -14,11 +14,11 @@ export default async function DashboardLayout({
   }
 
   return (
-    <div className="min-h-screen bg-[var(--background)]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-teal-50/30">
       <Header user={session.user} />
 
-      <main className="pb-20 md:pb-8">
-        <div className="max-w-4xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+      <main className="flex justify-center pb-24 md:pb-8">
+        <div className="w-full max-w-4xl mx-auto px-6 pt-6 pb-8 sm:px-8 lg:px-10">
           {children}
         </div>
       </main>

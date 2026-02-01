@@ -15,11 +15,11 @@ export default async function MaintenancePage() {
   const stats = await getStorageStats();
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col gap-10">
       {/* Storage Stats */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold text-slate-900">
+          <h2 className="text-lg font-semibold text-[var(--foreground)]">
             Storage Statistics
           </h2>
         </CardHeader>
@@ -27,39 +27,39 @@ export default async function MaintenancePage() {
           <div className="space-y-6">
             {/* Total Count */}
             <div>
-              <p className="text-sm text-slate-500">Total Loans</p>
-              <p className="text-3xl font-bold text-slate-900">
+              <p className="text-sm text-[var(--muted-foreground)]">Total Loans</p>
+              <p className="text-3xl font-bold text-[var(--foreground)]">
                 {stats.totalLoans}
               </p>
             </div>
 
             {/* By Status */}
             <div>
-              <p className="text-sm text-slate-500 mb-3">Loans by Status</p>
+              <p className="text-sm text-[var(--muted-foreground)] mb-3">Loans by Status</p>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {Object.entries(LOAN_STATUS_LABELS).map(([status, label]) => (
                   <div
                     key={status}
-                    className="bg-slate-50 rounded-lg p-3 text-center"
+                    className="bg-[var(--muted)] rounded-lg p-3 text-center"
                   >
-                    <p className="text-2xl font-bold text-slate-900">
+                    <p className="text-2xl font-bold text-[var(--foreground)]">
                       {stats.byStatus[status] || 0}
                     </p>
-                    <p className="text-xs text-slate-500 mt-1">{label}</p>
+                    <p className="text-xs text-[var(--muted-foreground)] mt-1">{label}</p>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Eligible for Cleanup */}
-            <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
-              <p className="text-sm font-medium text-amber-800">
+            <div className="p-4 bg-[var(--status-warning)] border border-amber-200 rounded-lg">
+              <p className="text-sm font-medium text-[var(--status-warning-text)]">
                 Eligible for Cleanup
               </p>
-              <p className="text-2xl font-bold text-amber-900 mt-1">
+              <p className="text-2xl font-bold text-[var(--status-warning-text)] mt-1">
                 {stats.eligibleForCleanup} loans
               </p>
-              <p className="text-xs text-amber-700 mt-2">
+              <p className="text-xs text-[var(--status-warning-text)] mt-2">
                 Released loans older than 1 year and cancelled loans older than 6
                 months
               </p>
@@ -71,7 +71,7 @@ export default async function MaintenancePage() {
       {/* Data Retention Policy */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold text-slate-900">
+          <h2 className="text-lg font-semibold text-[var(--foreground)]">
             Data Retention Policy
           </h2>
         </CardHeader>
@@ -80,29 +80,29 @@ export default async function MaintenancePage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="border-b border-slate-200">
-                    <th className="text-left py-2 font-medium text-slate-700">
+                  <tr className="border-b border-[var(--border)]">
+                    <th className="text-left py-2 font-medium text-[var(--foreground)]">
                       Status
                     </th>
-                    <th className="text-left py-2 font-medium text-slate-700">
+                    <th className="text-left py-2 font-medium text-[var(--foreground)]">
                       Retention Period
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b border-slate-100">
-                    <td className="py-2 text-slate-600">
+                  <tr className="border-b border-[var(--border)]">
+                    <td className="py-2 text-[var(--secondary-foreground)]">
                       Active (Applied → Vouchered)
                     </td>
-                    <td className="py-2 text-slate-600">Keep indefinitely</td>
+                    <td className="py-2 text-[var(--secondary-foreground)]">Keep indefinitely</td>
                   </tr>
-                  <tr className="border-b border-slate-100">
-                    <td className="py-2 text-slate-600">Released</td>
-                    <td className="py-2 text-slate-600">Delete after 1 year</td>
+                  <tr className="border-b border-[var(--border)]">
+                    <td className="py-2 text-[var(--secondary-foreground)]">Released</td>
+                    <td className="py-2 text-[var(--secondary-foreground)]">Delete after 1 year</td>
                   </tr>
                   <tr>
-                    <td className="py-2 text-slate-600">Cancelled</td>
-                    <td className="py-2 text-slate-600">
+                    <td className="py-2 text-[var(--secondary-foreground)]">Cancelled</td>
+                    <td className="py-2 text-[var(--secondary-foreground)]">
                       Delete after 6 months
                     </td>
                   </tr>
@@ -110,7 +110,7 @@ export default async function MaintenancePage() {
               </table>
             </div>
 
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-[var(--muted-foreground)]">
               Vercel Postgres free tier: 256MB storage. Estimated capacity:
               ~100,000 loans with full history.
             </p>
@@ -121,13 +121,13 @@ export default async function MaintenancePage() {
       {/* Cleanup Action */}
       <Card>
         <CardHeader>
-          <h2 className="text-lg font-semibold text-slate-900">
+          <h2 className="text-lg font-semibold text-[var(--foreground)]">
             Manual Cleanup
           </h2>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-[var(--secondary-foreground)]">
               Run cleanup to delete old released and cancelled loans based on the
               retention policy above.
             </p>
