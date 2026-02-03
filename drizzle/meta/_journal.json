@@ -8,6 +8,13 @@
       "when": 1769926141748,
       "tag": "0000_oval_tenebrous",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1770081384909,
+      "tag": "0001_milky_blindfold",
+      "breakpoints": true
     }
   ]
 }

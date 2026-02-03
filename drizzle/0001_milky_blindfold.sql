@@ -1,0 +1,1 @@
+ALTER TABLE "loans" ADD COLUMN "maturity_date" timestamp;

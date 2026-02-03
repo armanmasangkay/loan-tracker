@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { Card, Modal, Button, Textarea } from "@/components/ui";
+import { Card, Modal, Button, Textarea, Input } from "@/components/ui";
 import { LoanStatusBadge } from "./LoanStatusBadge";
 import { formatPHP } from "@/lib/utils";
 import { format } from "date-fns";
@@ -23,6 +23,7 @@ function InlineStatusSelector({ loanId, currentStatus }: InlineStatusSelectorPro
   const [showModal, setShowModal] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<LoanStatus | null>(null);
   const [notes, setNotes] = useState("");
+  const [maturityDate, setMaturityDate] = useState("");
   const [error, setError] = useState<string | null>(null);
 
   const handleBadgeClick = (e: React.MouseEvent) => {
@@ -45,13 +46,19 @@ function InlineStatusSelector({ loanId, currentStatus }: InlineStatusSelectorPro
     if (!selectedStatus) return;
     setError(null);
     startTransition(async () => {
-      const result = await updateLoanStatus(loanId, selectedStatus, notes || undefined);
+      const result = await updateLoanStatus(
+        loanId,
+        selectedStatus,
+        notes || undefined,
+        selectedStatus === "vouchered" ? maturityDate || undefined : undefined
+      );
       if (result?.error) {
         setError(result.error);
       } else {
         setShowModal(false);
         setSelectedStatus(null);
         setNotes("");
+        setMaturityDate("");
       }
     });
   };
@@ -62,6 +69,7 @@ function InlineStatusSelector({ loanId, currentStatus }: InlineStatusSelectorPro
     setShowModal(false);
     setSelectedStatus(null);
     setNotes("");
+    setMaturityDate("");
     setError(null);
   };
 
@@ -134,6 +142,22 @@ function InlineStatusSelector({ loanId, currentStatus }: InlineStatusSelectorPro
                 placeholder="Add any notes about this status change..."
                 disabled={isPending}
               />
+
+              {selectedStatus === "vouchered" && (
+                <div className="pt-2">
+                  <Input
+                    label="Maturity Date"
+                    type="date"
+                    value={maturityDate}
+                    onChange={(e) => setMaturityDate(e.target.value)}
+                    disabled={isPending}
+                    required
+                  />
+                  <p className="text-xs text-[var(--muted-foreground)] mt-1">
+                    Required for vouchered loans
+                  </p>
+                </div>
+              )}
             </div>
           )}
 
@@ -150,7 +174,7 @@ function InlineStatusSelector({ loanId, currentStatus }: InlineStatusSelectorPro
               onClick={(e) => handleConfirm(e)}
               isLoading={isPending}
               loadingText="Updating..."
-              disabled={!selectedStatus}
+              disabled={!selectedStatus || (selectedStatus === "vouchered" && !maturityDate)}
               className="flex-1"
             >
               Confirm
@@ -185,6 +209,11 @@ export function LoanCard({ loan }: LoanCardProps) {
               <p className="text-sm text-[var(--muted-foreground)]">
                 Applied: {format(new Date(loan.applicationDate), "MMM d, yyyy")}
               </p>
+              {loan.maturityDate && (
+                <p className="text-sm text-[var(--muted-foreground)]">
+                  Maturity: {format(new Date(loan.maturityDate), "MMM d, yyyy")}
+                </p>
+              )}
             </div>
 
             {/* Latest Note Preview */}

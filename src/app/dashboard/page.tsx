@@ -10,6 +10,8 @@ interface DashboardPageProps {
     search?: string;
     startDate?: string;
     endDate?: string;
+    maturityStartDate?: string;
+    maturityEndDate?: string;
   }>;
 }
 
@@ -37,6 +39,8 @@ async function LoanListWithData({
     search?: string;
     startDate?: string;
     endDate?: string;
+    maturityStartDate?: string;
+    maturityEndDate?: string;
   };
 }) {
   const loanFilters: LoanFilters = {
@@ -44,6 +48,8 @@ async function LoanListWithData({
     search: filters.search,
     startDate: filters.startDate,
     endDate: filters.endDate,
+    maturityStartDate: filters.maturityStartDate,
+    maturityEndDate: filters.maturityEndDate,
     sortOrder: "desc",
   };
 

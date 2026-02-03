@@ -5,20 +5,15 @@ export function middleware(request: NextRequest) {
   const sessionCookie = request.cookies.get("session");
   const pathname = request.nextUrl.pathname;
 
-  // Public routes
+  // Public routes - let the page handle auth checks
+  // (cookie may exist but be invalid/expired)
   if (pathname === "/login") {
-    if (sessionCookie) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
     return NextResponse.next();
   }
 
-  // Root redirect
+  // Root - let the page handle auth and redirect appropriately
   if (pathname === "/") {
-    if (sessionCookie) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-    return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.next();
   }
 
   // Protected routes - require authentication

@@ -40,6 +40,7 @@ export const loans = pgTable("loans", {
   applicationDate: timestamp("application_date").notNull(),
   amount: decimal("amount", { precision: 15, scale: 2 }).notNull(), // PHP format
   status: varchar("status", { length: 20 }).notNull().default("applied"),
+  maturityDate: timestamp("maturity_date"), // Set when loan is vouchered
   createdById: integer("created_by_id")
     .notNull()
     .references(() => users.id),

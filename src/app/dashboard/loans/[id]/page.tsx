@@ -76,7 +76,7 @@ export default async function LoanDetailPage({ params }: LoanDetailPageProps) {
           </div>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
             <div className="space-y-3">
               <p className="text-sm text-[var(--muted-foreground)]">Loan Amount</p>
               <p className="text-2xl font-bold text-[var(--foreground)]">
@@ -89,6 +89,14 @@ export default async function LoanDetailPage({ params }: LoanDetailPageProps) {
                 {format(new Date(loan.applicationDate), "MMMM d, yyyy")}
               </p>
             </div>
+            {loan.maturityDate && (
+              <div className="space-y-3">
+                <p className="text-sm text-[var(--muted-foreground)]">Maturity Date</p>
+                <p className="text-lg font-semibold text-[var(--foreground)]">
+                  {format(new Date(loan.maturityDate), "MMMM d, yyyy")}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Status Change */}

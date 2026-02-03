@@ -57,13 +57,17 @@ export async function getSession() {
     where: and(eq(sessions.id, sessionId), gt(sessions.expiresAt, new Date())),
   });
 
-  if (!session) return null;
+  if (!session) {
+    return null;
+  }
 
   const user = await db.query.users.findFirst({
     where: and(eq(users.id, session.userId), eq(users.isActive, true)),
   });
 
-  if (!user) return null;
+  if (!user) {
+    return null;
+  }
 
   return {
     user: {

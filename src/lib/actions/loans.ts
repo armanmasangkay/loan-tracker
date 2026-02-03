@@ -62,17 +62,23 @@ export async function createLoan(
 export async function updateLoanStatus(
   loanId: number,
   newStatus: LoanStatus,
-  notes?: string
+  notes?: string,
+  maturityDate?: string
 ) {
   const session = await assertAuth();
 
-  const result = statusChangeSchema.safeParse({ status: newStatus, notes });
+  const result = statusChangeSchema.safeParse({ status: newStatus, notes, maturityDate });
 
   if (!result.success) {
     return { error: result.error.issues[0].message };
   }
 
   const validated = result.data;
+
+  // Require maturity date when changing to vouchered
+  if (validated.status === "vouchered" && !validated.maturityDate) {
+    return { error: "Maturity date is required when changing status to Vouchered" };
+  }
 
   const loan = await db.query.loans.findFirst({
     where: eq(loans.id, loanId),
@@ -82,10 +88,21 @@ export async function updateLoanStatus(
     return { error: "Loan not found" };
   }
 
+  // Build update object
+  const updateData: { status: string; updatedAt: Date; maturityDate?: Date } = {
+    status: validated.status,
+    updatedAt: new Date(),
+  };
+
+  // Set maturity date when changing to vouchered
+  if (validated.status === "vouchered" && validated.maturityDate) {
+    updateData.maturityDate = new Date(validated.maturityDate);
+  }
+
   // Update loan status
   await db
     .update(loans)
-    .set({ status: validated.status, updatedAt: new Date() })
+    .set(updateData)
     .where(eq(loans.id, loanId));
 
   // Record status change in history
@@ -128,6 +145,8 @@ export interface LoanFilters {
   search?: string;
   startDate?: string;
   endDate?: string;
+  maturityStartDate?: string;
+  maturityEndDate?: string;
   sortOrder?: "asc" | "desc";
 }
 
@@ -155,6 +174,17 @@ export async function getLoans(
     const endDate = new Date(filters.endDate);
     endDate.setDate(endDate.getDate() + 1);
     conditions.push(lte(loans.applicationDate, endDate));
+  }
+
+  if (filters.maturityStartDate) {
+    conditions.push(gte(loans.maturityDate, new Date(filters.maturityStartDate)));
+  }
+
+  if (filters.maturityEndDate) {
+    // Add one day to include the end date
+    const maturityEndDate = new Date(filters.maturityEndDate);
+    maturityEndDate.setDate(maturityEndDate.getDate() + 1);
+    conditions.push(lte(loans.maturityDate, maturityEndDate));
   }
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;

@@ -21,6 +21,10 @@ export const loanSchema = z.object({
 export const statusChangeSchema = z.object({
   status: z.enum(LOAN_STATUSES),
   notes: z.string().optional(),
+  maturityDate: z.string().optional().refine(
+    (val) => !val || !isNaN(Date.parse(val)),
+    { message: "Invalid maturity date format" }
+  ),
 });
 
 export const noteSchema = z.object({

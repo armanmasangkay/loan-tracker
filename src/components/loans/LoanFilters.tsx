@@ -18,6 +18,8 @@ export function LoanFilters() {
   const currentSearch = searchParams.get("search") || "";
   const currentStartDate = searchParams.get("startDate") || "";
   const currentEndDate = searchParams.get("endDate") || "";
+  const currentMaturityStartDate = searchParams.get("maturityStartDate") || "";
+  const currentMaturityEndDate = searchParams.get("maturityEndDate") || "";
 
   // Sync searchValue with URL params
   useEffect(() => {
@@ -47,7 +49,8 @@ export function LoanFilters() {
   };
 
   const hasFilters =
-    currentStatus || currentSearch || currentStartDate || currentEndDate;
+    currentStatus || currentSearch || currentStartDate || currentEndDate ||
+    currentMaturityStartDate || currentMaturityEndDate;
 
   const statusOptions = [
     { value: "", label: "All Statuses" },
@@ -149,17 +152,37 @@ export function LoanFilters() {
             />
 
             <Input
-              label="From Date"
+              label="Application From"
               type="date"
               value={currentStartDate}
               onChange={(e) => updateFilters({ startDate: e.target.value })}
             />
 
             <Input
-              label="To Date"
+              label="Application To"
               type="date"
               value={currentEndDate}
               onChange={(e) => updateFilters({ endDate: e.target.value })}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-[var(--border)]">
+            <div className="sm:col-span-1 flex items-center">
+              <p className="text-sm font-medium text-[var(--foreground)]">Maturity Date</p>
+            </div>
+
+            <Input
+              label="Maturity From"
+              type="date"
+              value={currentMaturityStartDate}
+              onChange={(e) => updateFilters({ maturityStartDate: e.target.value })}
+            />
+
+            <Input
+              label="Maturity To"
+              type="date"
+              value={currentMaturityEndDate}
+              onChange={(e) => updateFilters({ maturityEndDate: e.target.value })}
             />
           </div>
 
