@@ -24,6 +24,7 @@ export async function createLoan(
     applicantName: formData.get("applicantName") as string,
     applicationDate: formData.get("applicationDate") as string,
     amount: formData.get("amount") as string,
+    notes: (formData.get("notes") as string) || undefined,
   };
 
   const result = loanSchema.safeParse(rawData);
@@ -54,6 +55,15 @@ export async function createLoan(
     changedById: session.user.id,
     notes: "Loan application created",
   });
+
+  // Add initial note if provided
+  if (validated.notes?.trim()) {
+    await db.insert(loanNotes).values({
+      loanId: newLoan.id,
+      content: validated.notes.trim(),
+      createdById: session.user.id,
+    });
+  }
 
   revalidatePath("/dashboard", "page");
   redirect("/dashboard");

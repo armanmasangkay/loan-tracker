@@ -16,6 +16,7 @@ export const loanSchema = z.object({
     },
     { message: "Amount must be a valid positive number" }
   ),
+  notes: z.string().max(1000, "Note is too long").optional(),
 });
 
 export const statusChangeSchema = z.object({

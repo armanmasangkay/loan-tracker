@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { Input, Button } from "@/components/ui";
+import { Input, Button, Textarea } from "@/components/ui";
 import { createLoan } from "@/lib/actions/loans";
 
 export function LoanForm() {
@@ -39,6 +39,13 @@ export function LoanForm() {
         inputMode="decimal"
         placeholder="0.00"
         required
+        disabled={isPending}
+      />
+
+      <Textarea
+        label="Notes (Optional)"
+        name="notes"
+        placeholder="Add any initial notes or remarks..."
         disabled={isPending}
       />
 
