@@ -75,9 +75,9 @@ export async function updateLoanStatus(
 
   const validated = result.data;
 
-  // Require maturity date when changing to vouchered
-  if (validated.status === "vouchered" && !validated.maturityDate) {
-    return { error: "Maturity date is required when changing status to Vouchered" };
+  // Require maturity date when changing to encoded
+  if (validated.status === "encoded" && !validated.maturityDate) {
+    return { error: "Maturity date is required when changing status to Encoded" };
   }
 
   const loan = await db.query.loans.findFirst({
@@ -94,8 +94,8 @@ export async function updateLoanStatus(
     updatedAt: new Date(),
   };
 
-  // Set maturity date when changing to vouchered
-  if (validated.status === "vouchered" && validated.maturityDate) {
+  // Set maturity date when changing to encoded
+  if (validated.status === "encoded" && validated.maturityDate) {
     updateData.maturityDate = new Date(validated.maturityDate);
   }
 

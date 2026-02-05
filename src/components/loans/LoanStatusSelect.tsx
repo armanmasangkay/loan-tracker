@@ -40,7 +40,7 @@ export function LoanStatusSelect({
         loanId,
         selectedStatus,
         notes || undefined,
-        selectedStatus === "vouchered" ? maturityDate || undefined : undefined
+        selectedStatus === "encoded" ? maturityDate || undefined : undefined
       );
       if (result?.error) {
         setError(result.error);
@@ -98,7 +98,7 @@ export function LoanStatusSelect({
             disabled={isPending}
           />
 
-          {selectedStatus === "vouchered" && (
+          {selectedStatus === "encoded" && (
             <div>
               <Input
                 label="Maturity Date"
@@ -109,7 +109,7 @@ export function LoanStatusSelect({
                 required
               />
               <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                Required for vouchered loans
+                Required for encoded loans
               </p>
             </div>
           )}
@@ -127,7 +127,7 @@ export function LoanStatusSelect({
               onClick={handleConfirm}
               isLoading={isPending}
               loadingText="Updating..."
-              disabled={selectedStatus === "vouchered" && !maturityDate}
+              disabled={selectedStatus === "encoded" && !maturityDate}
               className="flex-1"
             >
               Confirm

@@ -50,7 +50,7 @@ function InlineStatusSelector({ loanId, currentStatus }: InlineStatusSelectorPro
         loanId,
         selectedStatus,
         notes || undefined,
-        selectedStatus === "vouchered" ? maturityDate || undefined : undefined
+        selectedStatus === "encoded" ? maturityDate || undefined : undefined
       );
       if (result?.error) {
         setError(result.error);
@@ -143,7 +143,7 @@ function InlineStatusSelector({ loanId, currentStatus }: InlineStatusSelectorPro
                 disabled={isPending}
               />
 
-              {selectedStatus === "vouchered" && (
+              {selectedStatus === "encoded" && (
                 <div className="pt-2">
                   <Input
                     label="Maturity Date"
@@ -154,7 +154,7 @@ function InlineStatusSelector({ loanId, currentStatus }: InlineStatusSelectorPro
                     required
                   />
                   <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                    Required for vouchered loans
+                    Required for encoded loans
                   </p>
                 </div>
               )}
@@ -174,7 +174,7 @@ function InlineStatusSelector({ loanId, currentStatus }: InlineStatusSelectorPro
               onClick={(e) => handleConfirm(e)}
               isLoading={isPending}
               loadingText="Updating..."
-              disabled={!selectedStatus || (selectedStatus === "vouchered" && !maturityDate)}
+              disabled={!selectedStatus || (selectedStatus === "encoded" && !maturityDate)}
               className="flex-1"
             >
               Confirm
