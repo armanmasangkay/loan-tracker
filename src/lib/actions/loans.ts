@@ -8,9 +8,9 @@ import {
   LoanStatus,
   LoanWithRelations,
 } from "@/lib/db/schema";
-import { eq, and, gte, lte, ilike, desc, asc, sum } from "drizzle-orm";
-import { assertAuth } from "@/lib/auth/admin";
-import { loanSchema, statusChangeSchema, noteSchema } from "@/lib/validations/loan";
+import { eq, and, gte, lte, ilike, desc, asc, sum, sql } from "drizzle-orm";
+import { assertAuth, assertAdmin } from "@/lib/auth/admin";
+import { loanSchema, statusChangeSchema, noteSchema, loanEditSchema } from "@/lib/validations/loan";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -218,10 +218,12 @@ export async function getLoans(
         orderBy: [desc(loanNotes.createdAt)],
       },
     },
-    orderBy:
-      filters.sortOrder === "asc"
+    orderBy: [
+      asc(sql`CASE WHEN ${loans.status} IN ('released', 'cancelled') THEN 1 ELSE 0 END`),
+      ...(filters.sortOrder === "asc"
         ? [asc(loans.applicationDate)]
-        : [desc(loans.applicationDate)],
+        : [desc(loans.applicationDate)]),
+    ],
   });
 }
 
@@ -294,5 +296,43 @@ export async function deleteLoan(id: number) {
   await db.delete(loans).where(eq(loans.id, id));
 
   revalidatePath("/dashboard", "page");
+  return { success: true };
+}
+
+export async function updateLoanDetails(
+  loanId: number,
+  data: { applicantName: string; applicationDate: string; amount: string }
+) {
+  await assertAdmin();
+
+  const result = loanEditSchema.safeParse(data);
+
+  if (!result.success) {
+    return { error: result.error.issues[0].message };
+  }
+
+  const validated = result.data;
+  const cleanAmount = validated.amount.replace(/,/g, "");
+
+  const loan = await db.query.loans.findFirst({
+    where: eq(loans.id, loanId),
+  });
+
+  if (!loan) {
+    return { error: "Loan not found" };
+  }
+
+  await db
+    .update(loans)
+    .set({
+      applicantName: validated.applicantName.trim(),
+      applicationDate: new Date(validated.applicationDate),
+      amount: cleanAmount,
+      updatedAt: new Date(),
+    })
+    .where(eq(loans.id, loanId));
+
+  revalidatePath("/dashboard", "page");
+  revalidatePath(`/dashboard/loans/${loanId}`);
   return { success: true };
 }

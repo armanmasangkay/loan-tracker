@@ -1,18 +1,12 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { format } from "date-fns";
 import { getLoanById } from "@/lib/actions/loans";
 import { auth } from "@/lib/auth";
 import { Card, CardContent, CardHeader, Button } from "@/components/ui";
-import {
-  LoanStatusBadge,
-  LoanStatusSelect,
-  LoanHistory,
-  LoanNotes,
-} from "@/components/loans";
-import { formatPHP } from "@/lib/utils";
+import { LoanHistory, LoanNotes } from "@/components/loans";
 import { type LoanStatus } from "@/lib/db/schema";
 import { DeleteLoanButton } from "./DeleteLoanButton";
+import { LoanDetailEdit } from "./LoanDetailEdit";
 
 interface LoanDetailPageProps {
   params: Promise<{ id: string }>;
@@ -62,51 +56,17 @@ export default async function LoanDetailPage({ params }: LoanDetailPageProps) {
 
       {/* Main Info Card */}
       <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            <div className="space-y-1">
-              <h2 className="text-xl font-semibold text-[var(--foreground)]">
-                {loan.applicantName}
-              </h2>
-              <p className="text-sm text-[var(--muted-foreground)]">
-                Created by {loan.createdBy.displayName}
-              </p>
-            </div>
-            <LoanStatusBadge status={loan.status as LoanStatus} />
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            <div className="space-y-3">
-              <p className="text-sm text-[var(--muted-foreground)]">Loan Amount</p>
-              <p className="text-2xl font-bold text-[var(--foreground)]">
-                {formatPHP(loan.amount)}
-              </p>
-            </div>
-            <div className="space-y-3">
-              <p className="text-sm text-[var(--muted-foreground)]">Application Date</p>
-              <p className="text-lg font-semibold text-[var(--foreground)]">
-                {format(new Date(loan.applicationDate), "MMMM d, yyyy")}
-              </p>
-            </div>
-            {loan.maturityDate && (
-              <div className="space-y-3">
-                <p className="text-sm text-[var(--muted-foreground)]">Maturity Date</p>
-                <p className="text-lg font-semibold text-[var(--foreground)]">
-                  {format(new Date(loan.maturityDate), "MMMM d, yyyy")}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Status Change */}
-          <div className="mt-8 pt-8 border-t border-[var(--border)]">
-            <LoanStatusSelect
-              loanId={loan.id}
-              currentStatus={loan.status as LoanStatus}
-            />
-          </div>
-        </CardContent>
+        <LoanDetailEdit
+          key={loan.updatedAt.toString()}
+          loanId={loan.id}
+          applicantName={loan.applicantName}
+          applicationDate={loan.applicationDate}
+          amount={loan.amount}
+          maturityDate={loan.maturityDate}
+          isAdmin={isAdmin}
+          createdByName={loan.createdBy.displayName}
+          currentStatus={loan.status as LoanStatus}
+        />
       </Card>
 
       {/* Tabs for Mobile / Side-by-side for Desktop */}
