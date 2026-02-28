@@ -2,7 +2,40 @@ import { Suspense } from "react";
 import { getLoans, getTotalReleasedAmount, type LoanFilters } from "@/lib/actions/loans";
 import { LoanList, LoanFilters as LoanFiltersComponent, LoanSummary } from "@/components/loans";
 import { SkeletonList } from "@/components/ui";
-import { type LoanStatus } from "@/lib/db/schema";
+import { type LoanStatus, type LoanWithRelations } from "@/lib/db/schema";
+
+export interface YearlyBreakdown {
+  year: number;
+  months: { month: number; total: number }[];
+  yearTotal: number;
+}
+
+function computeReleasedBreakdown(loans: LoanWithRelations[]): YearlyBreakdown[] {
+  const released = loans.filter((l) => l.status === "released");
+
+  const map = new Map<number, Map<number, number>>();
+
+  for (const loan of released) {
+    const date = new Date(loan.applicationDate);
+    const year = date.getFullYear();
+    const month = date.getMonth(); // 0-indexed
+
+    if (!map.has(year)) map.set(year, new Map());
+    const monthMap = map.get(year)!;
+    monthMap.set(month, (monthMap.get(month) || 0) + parseFloat(loan.amount));
+  }
+
+  const result: YearlyBreakdown[] = [];
+  for (const [year, monthMap] of map) {
+    const months = Array.from(monthMap.entries())
+      .map(([month, total]) => ({ month, total }))
+      .sort((a, b) => b.month - a.month);
+    const yearTotal = months.reduce((sum, m) => sum + m.total, 0);
+    result.push({ year, months, yearTotal });
+  }
+
+  return result.sort((a, b) => b.year - a.year);
+}
 
 interface DashboardPageProps {
   searchParams: Promise<{
@@ -62,12 +95,14 @@ async function LoanListWithData({
     }),
   ]);
 
+  const breakdown = computeReleasedBreakdown(loans);
+
   return (
     <>
       <LoanList loans={loans} />
 
       <div className="sticky bottom-[5.5rem] md:bottom-4 z-30 mt-12">
-        <LoanSummary totalReleased={totalReleased} loanCount={loans.length} />
+        <LoanSummary totalReleased={totalReleased} loanCount={loans.length} breakdown={breakdown} />
       </div>
     </>
   );
