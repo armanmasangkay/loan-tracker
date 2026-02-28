@@ -1,5 +1,6 @@
 export { LoanCard } from "./LoanCard";
 export { LoanList } from "./LoanList";
+export { LoanListPaginated } from "./LoanListPaginated";
 export { LoanForm } from "./LoanForm";
 export { LoanFilters } from "./LoanFilters";
 export { LoanStatusBadge } from "./LoanStatusBadge";

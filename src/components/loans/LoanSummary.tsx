@@ -32,7 +32,7 @@ export function LoanSummary({ totalReleased, loanCount, breakdown }: LoanSummary
         </div>
         <div className="text-right flex flex-col items-end gap-2">
           <p className="text-sm text-[var(--muted-foreground)]">
-            {loanCount} loan{loanCount !== 1 ? "s" : ""} shown
+            {loanCount} loan{loanCount !== 1 ? "s" : ""} found
           </p>
           {breakdown.length > 0 && (
             <button

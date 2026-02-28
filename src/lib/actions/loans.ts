@@ -158,6 +158,8 @@ export interface LoanFilters {
   maturityStartDate?: string;
   maturityEndDate?: string;
   sortOrder?: "asc" | "desc";
+  limit?: number;
+  offset?: number;
 }
 
 export async function getLoans(
@@ -224,7 +226,99 @@ export async function getLoans(
         ? [asc(loans.applicationDate)]
         : [desc(loans.applicationDate)]),
     ],
+    ...(filters.limit !== undefined && { limit: filters.limit }),
+    ...(filters.offset !== undefined && { offset: filters.offset }),
   });
+}
+
+function buildFilterConditions(filters: LoanFilters) {
+  const conditions = [];
+
+  if (filters.status) {
+    conditions.push(eq(loans.status, filters.status));
+  }
+
+  if (filters.search) {
+    conditions.push(ilike(loans.applicantName, `%${filters.search}%`));
+  }
+
+  if (filters.startDate) {
+    conditions.push(gte(loans.applicationDate, new Date(filters.startDate)));
+  }
+
+  if (filters.endDate) {
+    const endDate = new Date(filters.endDate);
+    endDate.setDate(endDate.getDate() + 1);
+    conditions.push(lte(loans.applicationDate, endDate));
+  }
+
+  if (filters.maturityStartDate) {
+    conditions.push(gte(loans.maturityDate, new Date(filters.maturityStartDate)));
+  }
+
+  if (filters.maturityEndDate) {
+    const maturityEndDate = new Date(filters.maturityEndDate);
+    maturityEndDate.setDate(maturityEndDate.getDate() + 1);
+    conditions.push(lte(loans.maturityDate, maturityEndDate));
+  }
+
+  return conditions.length > 0 ? and(...conditions) : undefined;
+}
+
+export async function getLoanCount(
+  filters: LoanFilters = {}
+): Promise<number> {
+  await assertAuth();
+
+  const whereClause = buildFilterConditions(filters);
+
+  const result = await db
+    .select({ count: sql<number>`cast(count(*) as integer)` })
+    .from(loans)
+    .where(whereClause);
+
+  return result[0]?.count ?? 0;
+}
+
+export async function getReleasedBreakdown(
+  filters: Omit<LoanFilters, "status" | "limit" | "offset"> = {}
+): Promise<{ year: number; month: number; total: string }[]> {
+  await assertAuth();
+
+  const conditions = [eq(loans.status, "released")];
+
+  if (filters.search) {
+    conditions.push(ilike(loans.applicantName, `%${filters.search}%`));
+  }
+
+  if (filters.startDate) {
+    conditions.push(gte(loans.applicationDate, new Date(filters.startDate)));
+  }
+
+  if (filters.endDate) {
+    const endDate = new Date(filters.endDate);
+    endDate.setDate(endDate.getDate() + 1);
+    conditions.push(lte(loans.applicationDate, endDate));
+  }
+
+  const result = await db
+    .select({
+      year: sql<number>`cast(extract(year from ${loans.applicationDate}) as integer)`,
+      month: sql<number>`cast(extract(month from ${loans.applicationDate}) as integer) - 1`,
+      total: sum(loans.amount),
+    })
+    .from(loans)
+    .where(and(...conditions))
+    .groupBy(
+      sql`extract(year from ${loans.applicationDate})`,
+      sql`extract(month from ${loans.applicationDate})`
+    );
+
+  return result.map((r) => ({
+    year: r.year,
+    month: r.month,
+    total: r.total || "0",
+  }));
 }
 
 export async function getLoanById(
